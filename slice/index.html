@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Upload Files using XMLHttpRequest</title>
+    <script type="text/javascript">
+// based on https://stackoverflow.com/questions/7853467/uploading-a-file-in-chunks-using-html5
+
+    //create object that will hold uploaded file values
+    var slices = {};
+        slices.steps_completed = 0;
+        slices.steps_total = 0;
+        slices.file_name = 'blob'; //default name for a blob type is blob
+        slices.reset = function () {
+            //this function just resets the values used for processing
+            this.steps_completed = 0; //this is the # of slice uploads that have finished
+            this.steps_total = 0;  //this is the # of slices created for uploading
+            this.file_name = 'blob';  //the file name, as blob object does not have file name and defaults to 'blob'
+        }
+        slices.checkHumpty = function () {
+            //this function makes the call to put together the file from it's slices
+            if (this.steps_completed == this.steps_total) {
+                //make call to put humpty together again
+                var fd = new FormData();
+                fd.append("humpty", true);
+                fd.append("step", slices.steps_completed);
+                fd.append("fileName", slices.file_name);
+
+                var xhr = new XMLHttpRequest();
+                xhr.open("POST", "upload.php");
+                xhr.onload = function(e) {
+                alert("Humpty is back together again:  "+e.target.responseText);
+            };
+                xhr.send(fd);
+                this.reset();
+            }
+        }
+
+        window.BlobBuilder = window.MozBlobBuilder || window.WebKitBlobBuilder || window.BlobBuilder;
+
+        function sendRequest() {
+            var blob = document.getElementById('fileToUpload').files[0];
+            const BYTES_PER_CHUNK = 1048576; // 1MB chunk sizes.
+            const SIZE = blob.size;
+            var start = 0;
+            var end = BYTES_PER_CHUNK;
+            var step = 0;
+            var done = 0;
+            while( start < SIZE ) {
+                var chunk = blob.slice(start, end);
+                uploadFile(chunk, slices.steps_total);
+                start = end;
+                end = start + BYTES_PER_CHUNK;
+                //update the # of steps in total
+                slices.steps_total++ ;
+            }
+        }
+
+        function fileSelected() {
+            var file = document.getElementById('fileToUpload').files[0];
+            if (file) {
+                var fileSize = 0;
+                if (file.size > 1024 * 1024)
+                    fileSize = (Math.round(file.size * 100 / (1024 * 1024)) / 100).toString() + 'MB';
+                else
+                    fileSize = (Math.round(file.size * 100 / 1024) / 100).toString() + 'KB';
+
+                slices.file_name = file.name;
+                document.getElementById('fileName').innerHTML = 'Name: ' + slices.file_name;
+                document.getElementById('fileSize').innerHTML = 'Size: ' + fileSize;
+                document.getElementById('fileType').innerHTML = 'Type: ' + file.type;
+            }
+        }
+
+        function uploadFile(blobFile, step) {
+            //var file = document.getElementById('fileToUpload').files[0];
+            var fd = new FormData();
+            fd.append("fileToUpload", blobFile);
+            fd.append("step", slices.steps_total);
+            fd.append("fileName", slices.file_name);
+
+            var xhr = new XMLHttpRequest();
+            xhr.upload.addEventListener("progress", uploadProgress, false);
+            xhr.addEventListener("load", uploadComplete, false);
+            xhr.addEventListener("error", uploadFailed, false);
+            xhr.addEventListener("abort", uploadCanceled, false);
+            xhr.open("POST", "upload.php");
+            xhr.send(fd);
+        }
+
+        function uploadProgress(evt) {
+            if (evt.lengthComputable) {
+                var percentComplete = Math.round(evt.loaded * 100 / evt.total);
+                document.getElementById('progressNumber').innerHTML = percentComplete.toString() + '%';
+            }
+            else {
+                document.getElementById('progressNumber').innerHTML = 'unable to compute';
+            }
+        }
+
+        function uploadComplete(evt) {
+            /* This event is raised when the server send back a response */
+           // alert(evt.target.responseText);
+            //update # of steps completed and check to see if we're done
+            slices.steps_completed++ ;
+            slices.checkHumpty();
+        }
+
+        function uploadFailed(evt) {
+            alert("There was an error attempting to upload the file.");
+        }
+
+        function uploadCanceled(evt) {
+            xhr.abort();
+            xhr = null;
+            //alert("The upload has been canceled by the user or the browser dropped the connection.");
+            slices.reset();
+        }
+    </script>
+</head>
+<body>
+<form id="form1" enctype="multipart/form-data" method="post" action="upload.php">
+    <div class="row">
+        <label for="fileToUpload">Select a File to Upload</label><br />
+        <input type="file" name="fileToUpload" id="fileToUpload" onchange="fileSelected();"/>
+        <input type="button" value="cancel"  onClick="uploadCanceled();"/>
+    </div>
+    <div id="fileName"></div>
+    <div id="fileSize"></div>
+    <div id="fileType"></div>
+    <div class="row">
+        <input type="button" onclick="sendRequest();" value="Upload" />
+    </div>
+    <div id="progressNumber"></div>
+</form>
+</body>
+</html>
