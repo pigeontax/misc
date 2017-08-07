@@ -1,0 +1,4 @@
+This is just a proof of concept for an html upload widget that uploads a file in chunks.
+I read about it in a stackoverflow.com question and wanted to see it in action:
+
+https://stackoverflow.com/questions/7853467/uploading-a-file-in-chunks-using-html5
