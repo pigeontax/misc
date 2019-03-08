@@ -1,0 +1,172 @@
+body{
+    background-color: black;
+}
+.Wrap {
+    width: 95%;
+    min-height: 20%;
+    display: flex;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+
+input {
+    padding: .75em;
+    margin-top: 10px;
+    width: 100%;
+}
+
+.popupShell {
+    width:100%;
+    height:100%;
+    position:fixed;
+    top:0px;
+    left:0px;
+    background:rgba(0,0,0,0.75);
+}
+
+.popupForm {
+    max-width:700px;
+    min-height: 200px;
+    width:90%;
+    padding:1.25em;
+    position:absolute;
+    top:50%;
+    left:50%;
+    -webkit-transform:translate(-50%, -50%);
+    transform:translate(-50%, -50%);
+    box-shadow:0px 2px 6px rgba(0,0,0,1);
+    border-radius:3px;
+    background:#fff;
+}
+
+.popupNoShow {
+    display:none;
+}
+
+.closeLink {
+    float:right;
+    margin-left:95%;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.answer {
+    font-size: x-large;
+    font-size: -webkit-x-large;
+}
+
+.askForm {
+    top:30%;
+}
+
+.doggie {
+    background-color: black;
+    background-image: url("pics/stare_320x427.jpg");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+    min-height: 380px;
+    color: mediumorchid;
+    text-align: center;
+
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+}
+
+.doggie-bg {
+    background-image: url("pics/stare_320x427.jpg");
+}
+
+.doggie-bg-distracted {
+    background-image: url("pics/distracted_320x427.jpg");
+}
+
+
+.doggie-bg-notsure {
+    background-image: url("pics/thinking_320x427.jpg");
+}
+
+
+.doggie-bg-answer {
+    background-image: url("pics/seriously_320x427.jpg");
+}
+
+.doggie-bg-power {
+    background-image: url("pics/power_320x427.jpg");
+}
+
+/*  OVERRIDE  */
+.popupForm {
+    min-height: 55px;
+    top: 75%;
+}
+
+
+/* For width smaller than 600px: */
+@media only screen and (max-width: 559px) {
+
+
+}
+/* For width 600px and larger: */
+@media only screen and (min-width: 600px) {
+    .doggie {
+        background-image: url("pics/stare_768x1024.jpg");
+        min-height: 600px;
+    }
+    .doggie-bg {
+        background-image: url("pics/stare_768x1024.jpg");
+    }
+
+    .doggie-bg-distracted {
+        background-image: url("pics/distracted_768x1024.jpg");
+    }
+
+
+    .doggie-bg-notsure {
+        background-image: url("pics/thinking_768x1024.jpg");
+    }
+
+    .doggie-bg-answer {
+        background-image: url("pics/seriously_768x1024.jpg");
+    }
+
+    .doggie-bg-power {
+        background-image: url("pics/power_768x1024.jpg");
+    }
+
+}
+
+@media only screen and (min-width: 800px) {
+    .doggie {
+        background-image: url("pics/stare2.jpg");
+    }
+
+    .doggie-bg {
+        background-image: url("pics/stare2.jpg");
+    }
+
+    .doggie-bg-distracted {
+        background-image: url("pics/distracted2.jpg");
+    }
+
+    .doggie-bg-notsure {
+        background-image: url("pics/thinking2.jpg");
+    }
+
+    .doggie-bg-answer {
+        background-image: url("pics/seriously2.jpg");
+    }
+
+    .doggie-bg-power {
+        background-image: url("pics/power2.jpg");
+    }
+
+    .answer {
+        font-size: xx-large;
+        font-size: -webkit-xx-large;
+    }
+
+}
+
